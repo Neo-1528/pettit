@@ -3,7 +3,6 @@ import Card from "../components/Card";
 import FieldInformation from "../components/FieldInformation";
 import BattleLog from "../components/BattleLog";
 import GameResultModal from "../components/GameResultModal";
-import AdminCardForm from "./AdminCardForm";
 import Login from "./Login";
 
 const MainGamePage = ({
