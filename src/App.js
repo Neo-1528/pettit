@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { deckTypeA, deckTypeB } from './cardData';
-import Login from "./pages/Login";
 import { auth } from "./firebase";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import CardListPage from "./pages/CardListPage";
