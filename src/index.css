@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fadeInPop {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  .animate-summon {
+    animation: fadeInPop 0.4s ease-out;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-2px); }
+  }
+  
+  .animate-hit {
+    animation: shake 0.3s ease;
+  }
+
+  @keyframes rareFlash {
+    0%, 100% { box-shadow: 0 0 10px gold; }
+    50% { box-shadow: 0 0 20px red; }
+  }
+  
+  .animate-rare {
+    animation: rareFlash 1s ease-in-out;
+  }
+  
+  
