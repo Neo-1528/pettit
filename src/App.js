@@ -12,6 +12,8 @@ import Gacha from './pages/Gacha';
 import DeckEditor from './pages/DeckEditor';
 import HowToPlay from './pages/HowToPlay';
 import VersusMode from './pages/VersusMode';
+import AdminCardForm from './pages/AdminCardForm';
+
 
 function generateDeck(size, baseCards) {
   const deck = [];
@@ -382,7 +384,7 @@ export default function App() {
       <Route path="/deck" element={<DeckEditor />} />
       <Route path="/howto" element={<HowToPlay />} />
       <Route path="/versus" element={<VersusMode />} />
-      {/* <Route path="/admin" element={<AdminCardForm />} /> */}
+      <Route path="/admin" element={<AdminCardForm />} />
 
       {/* トップページ(元のゲーム画面) */}
       <Route path="/" element={<Home user={user} />} />
