@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+
+
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { deckTypeA, deckTypeB } from './cardData';
 import { auth } from "./firebase";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CardListPage from "./pages/CardListPage";
 import MainGamePage from "./pages/MainGamePage";
 import Home from './pages/Home';
@@ -10,10 +12,6 @@ import Gacha from './pages/Gacha';
 import DeckEditor from './pages/DeckEditor';
 import HowToPlay from './pages/HowToPlay';
 import VersusMode from './pages/VersusMode';
-
-
-
-
 
 function generateDeck(size, baseCards) {
   const deck = [];
@@ -43,18 +41,41 @@ export default function App() {
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [deck, setDeck] = useState([]);
   const [enemyDeck, setEnemyDeck] = useState([]);
-  const [enemyDeckType, setEnemyDeckType] = useState(null);
-  const [hitIndex, setHitIndex] = useState(null); //攻撃対象カードにanimate-hitを追加
-  const [selectedEnemyIndex, setSelectedEnemyIndex] = useState(null);  //攻撃する敵カードを選択
-  const [hasAttackedThisPhase, setHasAttackedThisPhase] = useState(false);  //攻撃済みフラグ
-  const [isHandZoomed, setIsHandZoomed] = useState(false);  //手札拡大
-  const [gameResult, setGameResult] = useState(null); // 結果: "win", "lose", "draw"
+  const [hitIndex, setHitIndex] = useState(null);
+  const [selectedEnemyIndex, setSelectedEnemyIndex] = useState(null);
+  const [hasAttackedThisPhase, setHasAttackedThisPhase] = useState(false);
+  const [gameResult, setGameResult] = useState(null);
   const bgmRef = useRef(null);
   const [turn, setTurn] = useState(1);
   const isPlayerTurn = turn % 2 === 1;
-  const [user, setUser] = useState(null); //ユーザー情報を保存
+  const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(null);
 
+  const drawInitialHand = useCallback((deckSource) => {
+    let newDeck = [...deckSource];
+    let drawn;
+    do {
+      drawn = newDeck.splice(0, 5);
+    } while (!containsLowPPCards(drawn) && mulliganCount === 3);
+    setDeck(newDeck);
+    setHand(drawn);
+  }, [mulliganCount]);
+
+  const drawEnemyCards = useCallback((count, currentTurn) => {
+    const newDeck = [...enemyDeck];
+    const newHand = [...enemyHand];
+    const restriction = getPPRestriction(currentTurn);
+    for (let i = 0; i < count; i++) {
+      const validCards = newDeck.filter(card => card.pp <= restriction);
+      if (validCards.length === 0) break;
+      const selected = validCards[Math.floor(Math.random() * validCards.length)];
+      const index = newDeck.findIndex(card => card === selected);
+      newHand.push(selected);
+      newDeck.splice(index, 1);
+    }
+    setEnemyDeck(newDeck);
+    setEnemyHand(newHand);
+  }, [enemyDeck, enemyHand]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -70,9 +91,8 @@ export default function App() {
       drawInitialHand(initial);
       drawEnemyCards(5, turn);
     }
-  }, [selectedDeck]);
+  }, [selectedDeck, drawInitialHand, drawEnemyCards, turn]);
 
-//アニメーション追加
   useEffect(() => {
     if (field.length > 0) {
       const timer = setTimeout(() => {
@@ -81,8 +101,7 @@ export default function App() {
       return () => clearTimeout(timer);
     }
   }, [field]);
-  
-//ＢＧＭ設定
+
   useEffect(() => {
     if (!bgmRef.current) {
       const bgm = new Audio('/sounds/bgm.mp3');
@@ -104,13 +123,11 @@ export default function App() {
     const selected = type === "A" ? deckTypeA : deckTypeB;
     const deck = generateDeck(30, selected);
     const enemyDeckList = Math.random() < 0.5 ? deckTypeA : deckTypeB;
-  
+
     setDeck(deck);
     setSelectedDeck(selected);
-    setEnemyDeckType(enemyDeckList);
     setEnemyDeck(generateDeck(30, enemyDeckList));
   };
-  
 
   const playSE = (file) => {
     const audio = new Audio(`/sounds/${file}`);
@@ -118,21 +135,6 @@ export default function App() {
     audio.play();
   };
 
-  const stopBGM = () => {
-    if (bgmRef.current) {
-      bgmRef.current.pause();
-    }
-  };
-
-  const drawInitialHand = (deckSource) => {
-    let newDeck = [...deckSource];
-    let drawn;
-    do {
-      drawn = newDeck.splice(0, 5);
-    } while (!containsLowPPCards(drawn) && mulliganCount === 3);
-    setDeck(newDeck);
-    setHand(drawn);
-  };
 
   const handleMulligan = () => {
     if (mulliganCount > 0) {
@@ -143,14 +145,12 @@ export default function App() {
 
   const startGame = () => {
     setWaitingForStart(false);
-    
     if (bgmRef.current) {
       bgmRef.current.play().catch((e) => {
         console.warn("BGM再生失敗:", e);
-    });
-   }
-
-   enemyPlayCards();
+      });
+    }
+    enemyPlayCards();
   };
 
   const getPPRestriction = (turn) => {
@@ -173,22 +173,6 @@ export default function App() {
     }
     setDeck(newDeck);
     setHand(newHand);
-  };
-
-  const drawEnemyCards = (count, currentTurn) => {
-    const newDeck = [...enemyDeck];
-    const newHand = [...enemyHand];
-    const restriction = getPPRestriction(currentTurn);
-    for (let i = 0; i < count; i++) {
-      const validCards = newDeck.filter(card => card.pp <= restriction);
-      if (validCards.length === 0) break;
-      const selected = validCards[Math.floor(Math.random() * validCards.length)];
-      const index = newDeck.findIndex(card => card === selected);
-      newHand.push(selected);
-      newDeck.splice(index, 1);
-    }
-    setEnemyDeck(newDeck);
-    setEnemyHand(newHand);
   };
 
   const playCard = (card, index) => {
