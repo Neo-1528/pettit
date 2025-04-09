@@ -1,7 +1,7 @@
 // src/CardList.js
 
 import { useEffect, useState } from "react";
-import { db } from '../firebase';
+import { db } from '../firebase/firebase';
 import {
   collection,
   query,
@@ -11,7 +11,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { auth } from '../firebase';
+import { auth } from '../firebase/firebase';
 
 const CardList = () => {
   const [cards, setCards] = useState([]);

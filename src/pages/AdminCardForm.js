@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { saveCardToFirestore } from '../saveCard';
-import { auth } from '../firebase';
+import { auth } from '../firebase/firebase';
 
 const AdminCardForm = () => {
   const [card, setCard] = useState({

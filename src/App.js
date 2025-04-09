@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { deckTypeA, deckTypeB } from './cardData';
-import { auth } from "./firebase";
+import { auth } from "./firebase/firebase";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CardListPage from "./pages/CardListPage";
 import MainGamePage from "./pages/MainGamePage";
@@ -13,6 +13,7 @@ import DeckEditor from './pages/DeckEditor';
 import HowToPlay from './pages/HowToPlay';
 import VersusMode from './pages/VersusMode';
 import AdminCardForm from './pages/AdminCardForm';
+import { useNavigate } from 'react-router-dom';
 
 
 function generateDeck(size, baseCards) {
@@ -52,6 +53,8 @@ export default function App() {
   const isPlayerTurn = turn % 2 === 1;
   const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(null);
+
+  const navigate = useNavigate();
 
   const drawInitialHand = useCallback((deckSource) => {
     let newDeck = [...deckSource];
@@ -379,12 +382,6 @@ export default function App() {
     <div className="p-4 min-h-screen bg-gradient-to-br from-green-100 to-blue-200">
 
     <Routes>
-      <Route path="/home" element={<Home user={user} />} />
-      <Route path="/gacha" element={<Gacha />} />
-      <Route path="/deck" element={<DeckEditor />} />
-      <Route path="/howto" element={<HowToPlay />} />
-      <Route path="/versus" element={<VersusMode />} />
-      <Route path="/admin" element={<AdminCardForm />} />
 
       {/* トップページ(元のゲーム画面) */}
       <Route path="/" element={<Home user={user} />} />
@@ -425,6 +422,17 @@ export default function App() {
       {/* カード一覧ページ */}
       <Route path="/cards" element={<CardListPage />} />
     </Routes>
+
+    {/* 画面下部に表示するホームボタン */}
+    <div className="fixed bottom-0 w-full bg-white/80 text-center py-2 border-t border-gray-300 z-40">
+      <button
+        onClick={() => navigate('/home')}
+         className="text-blue-600 font-bold text-lg"
+      >
+         🏠 ホームに戻る
+      </button>
+    </div>
+
     </div>
   </Router>
   );

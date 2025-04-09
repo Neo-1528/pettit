@@ -1,5 +1,5 @@
 // src/saveCard.js
-import { db } from "./firebase";
+import { db } from "./firebase/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export const saveCardToFirestore = async (cardData, userId) => {
