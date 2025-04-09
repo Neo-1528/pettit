@@ -16,7 +16,6 @@ const Gacha = () => {
     const randomCard = initialCards[Math.floor(Math.random() * initialCards.length)];
     setGachaResult(randomCard);
     setPetitCoins(prev => prev - 5);
-    setOwnedCards(prev => [...prev, randomCard]);
   };
 
   return (
