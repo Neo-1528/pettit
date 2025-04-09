@@ -6,7 +6,6 @@ import { initialCards } from "../gachadata/cards"; // カードデータを使�
 const Gacha = () => {
   const [petitCoins, setPetitCoins] = useState(100); // 所持プチコイン
   const [gachaResult, setGachaResult] = useState(null);
-  const [ownedCards, setOwnedCards] = useState([]);
 
   const pullGacha = () => {
     if (petitCoins < 5) {

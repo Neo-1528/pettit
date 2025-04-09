@@ -2,15 +2,9 @@
 
 // Firebase Firestore を使ったオンライン対戦部屋システムの基本構成
 
-import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc, onSnapshot } from "firebase/firestore";
 import { db, auth } from "./firebase";
 
-// ✅ Firebase 設定（あなたの環境に置き換えてください）
-const firebaseConfig = {
-  apiKey: process.env.React_APP_FIREBASE_API_KEY,
-  authDomain: process.env.React_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.React_APP_FIREBASE_PROJECT_ID,
-};
 
 
 // ✅ ルームを作成する関数

@@ -1,7 +1,6 @@
 
 
 import React, { useState, useEffect } from "react";
-import { auth } from "../firebase/firebase";
 import { createRoom, joinRoom, subscribeToRoom } from "../firebase/room";
 
 
