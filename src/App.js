@@ -8,11 +8,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CardListPage from "./pages/CardListPage";
 import MainGamePage from "./pages/MainGamePage";
 import Home from './pages/Home';
-import Gacha from './pages/Gacha';
-import DeckEditor from './pages/DeckEditor';
-import HowToPlay from './pages/HowToPlay';
-import VersusMode from './pages/VersusMode';
-import AdminCardForm from './pages/AdminCardForm';
 import { useNavigate } from 'react-router-dom';
 
 
