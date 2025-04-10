@@ -7,7 +7,6 @@ import { deckTypeA, deckTypeB } from "../cardData";
 import { useNavigate } from "react-router-dom";
 
 const StarterDeckSelector = ({ uid }) => {
-  const navigate = useNavigate();
 
   const handleSelect = async (type) => {
     const deckId = type === "A" ? "A" : "B";
