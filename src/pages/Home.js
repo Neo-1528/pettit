@@ -4,12 +4,34 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from '../firebase/firebase';
+import { doc, getDoc } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 import Login from './Login';
+import StarterDeckSelector from "../components/StarterDeckSelector";
+import homeImage from "../assets/home.png";
+
+
+
+
 
 
 const Home = ({ user }) => {
-  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) return;
+    const unsubscribe = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+      if (docSnap.exists()) {
+        setUserData(docSnap.data());
+      }
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
@@ -35,70 +57,72 @@ const Home = ({ user }) => {
     return <Login />;
   }
 
+  if (!userData?.starterDeck) {
+    return <StarterDeckSelector uid={user.uid} />;
+  }
+  
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-200 to-white text-center p-4">
-      <h1 className="text-4xl font-bold mb-8 text-purple-700">プチ☆ボトルバトル</h1>
+    <div className="relative w-screen h-screen overflow-hidden">
+      <img src={homeImage} alt="ホーム画面" className="absolute w-full h-full object-cover z-0" />
 
-      <div className="space-y-4 w-full max-w-xs">
-        <button
-          onClick={() => navigate("/")}
-          className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded shadow"
-        >
-          🎮 ゲームをはじめる
-        </button>
+      <div className="absolute inset-0 z-10">
 
-        <button
-          onClick={() => navigate("/cards")}
-          className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded shadow"
-        >
-          🧾 カード一覧
-        </button>
-
-        <button
-          onClick={() => navigate("/admin")}
-          className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded shadow"
-        >
-          🛠️ カード作成（管理用）
-        </button>
-
-        <button
-          onClick={() => navigate("/deck")}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow"
-        >
-          🎴 デッキ編集
-        </button>
-
-        <button
-          onClick={() => navigate("/gacha")}
-          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded shadow"
-        >
-        　🎁 ガチャ
-        </button>
-
-        <button
-          onClick={() => navigate("/howto")}
-          className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded shadow"
-        >
-          📘 遊び方・ルール
-        </button>
-
+      {/* バトル */}
         <button
           onClick={() => navigate("/versus")}
-          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded shadow"
-        >
-          🆚 対戦モード
-        </button>
+          className="absolute top-[28vh] left-[18vw] w-[22vw] h-[10vh] bg-transparent" />
 
+      {/* デッキ */}
         <button
-          onClick={handleSignOut}
-          className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded shadow"
-        >
-          🚪 ログアウト
+          onClick={() => navigate("/deck")}
+          className="absolute top-[28vh] left-[52vw] w-[22vw] h-[10vh] bg-transparent" />
+
+      {/* ガチャ */}
+        <button
+          onClick={() => navigate("/gacha")}
+          className="absolute top-[42vh] left-[35vw] w-[22vw] h-[10vh] bg-transparent" />
+
+      {/* 遊び方・ルール */}
+        <button
+          onClick={() => navigate("/howto")}
+          className="absolute top-[56vh] left-[20vw] w-[28vw] h-[10vh] bg-transparent" />
+
+      {/* 図鑑 */}
+        <button
+          onClick={() => alert("図鑑はまだ未実装です")}
+          className="absolute top-[59vh] left-[57vw] w-[20vw] h-[10vh] bg-transparent" />
+        
+      {/* 設定 */}
+        <button
+          onClick={() => alert("設定はまだ未実装です")}
+          className="absolute top-[5vh] left-[5vw] w-[15vw] h-[10vh] bg-transparent" />
+
+      {/* お知らせ */}
+        <button
+          onClick={() => alert("お知らせはまだ未実装です")}
+          className="absolute top-[5vh] left-[5vw] w-[15vw] h-[10vh] bg-transparent" />
+        
+      {/* プレイヤー情報 */}
+        <button
+          onClick={() => alert("プレイヤー情報はまだ未実装です")}
+          className="absolute bottom-[8vh] left-[10vw] w-[20vw] h-[10vh] bg-transparent" />
+        
+      {/* フレンド */}
+        <button
+          onClick={() => alert("フレンド機能はまだ未実装です")}
+          className="absolute bottom-[8vh] left-[10vw] w-[20vw] h-[10vh] bg-transparent" />
+
+      {/* ログアウト */}
+      <button onClick={handleSignOut}  
+        className="absolute top-[1vh] right-[1vw] text-xs text-white bg-black bg-opacity-50 px-2 py-1 rounded">
+          ログアウト
         </button>
       </div>
 
       {user && (
-        <p className="mt-8 text-sm text-gray-600">ログイン中: {user.email}</p>
+        <p className="absolute bottom-2 left-2 text-white text-xs bg-black bg-opacity-50 px-2 py-1 rounded">
+          ログイン中: {user.email}</p>
       )}
     </div>
   );
