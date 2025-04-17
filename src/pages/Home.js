@@ -1,19 +1,11 @@
 
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from '../firebase/firebase';
+import { auth } from "../firebase/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-import Login from './Login';
-import StarterDeckSelector from "../components/StarterDeckSelector";
-import homeImage from "../assets/home.png";
-
-
-
-
-
+import Login from "./Login";
 
 const Home = ({ user }) => {
   const [userData, setUserData] = useState(null);
@@ -27,17 +19,21 @@ const Home = ({ user }) => {
         setUserData(docSnap.data());
       }
     });
-
     return () => unsubscribe();
   }, [user]);
 
-
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+    const unsubscribe = auth.onAuthStateChanged(() => {
       setAuthChecked(true);
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (userData && userData.starterSelected === false) {
+      navigate("/starter");
+    }
+  }, [userData, navigate]);
 
   const handleSignOut = async () => {
     try {
@@ -48,80 +44,41 @@ const Home = ({ user }) => {
     }
   };
 
-  if (!authChecked) {
-    return <div className="text-center mt-10 text-gray-500">読み込み中...</div>
-  }
-
-  if (!user) {
-    return <Login />;
-  }
-
-  if (!userData?.starterDeck) {
-    return <StarterDeckSelector uid={user.uid} />;
-  }
-  
+  if (!authChecked) return <div className="text-center mt-10 text-gray-500">読み込み中...</div>;
+  if (!user) return <Login />;
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
-      <img src={homeImage} alt="ホーム画面" className="absolute w-full h-full object-cover z-0" />
+    <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-200 to-white text-center p-4">
+      <h1 className="text-4xl font-bold mb-8 text-purple-700">プチ☆ボトルバトル</h1>
 
-      <div className="absolute inset-0 z-10">
+      <div className="space-y-4 w-full max-w-xs">
+        <button onClick={() => navigate("/mode-select")} className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 z-0 rounded shadow">
+          🆚 対戦する
+        </button>
 
-      {/* バトル */}
-        <button
-          onClick={() => navigate("/versus")}
-          className="absolute top-[28vh] left-[18vw] w-[22vw] h-[10vh] bg-transparent" />
+        <button onClick={() => navigate("/deck")} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 z-0 rounded shadow">
+          🎴 デッキ編集
+        </button>
 
-      {/* デッキ */}
-        <button
-          onClick={() => navigate("/deck")}
-          className="absolute top-[28vh] left-[52vw] w-[22vw] h-[10vh] bg-transparent" />
+        <button onClick={() => navigate("/shateki-gacha")} className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 z-0 rounded shadow">
+          🎐 射的神楽
+        </button>
 
-      {/* ガチャ */}
-        <button
-          onClick={() => navigate("/gacha")}
-          className="absolute top-[42vh] left-[35vw] w-[22vw] h-[10vh] bg-transparent" />
+        <button onClick={() => navigate("/zukan")} className="w-full bg-green-500 hover:bg-blue-600 text-white py-2 px-4 z-0 rounded shadow">
+          図鑑
+        </button>
 
-      {/* 遊び方・ルール */}
-        <button
-          onClick={() => navigate("/howto")}
-          className="absolute top-[56vh] left-[20vw] w-[28vw] h-[10vh] bg-transparent" />
+        <button onClick={() => navigate("/howto")} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 z-0 rounded shadow">
+          📘 遊び方・ルール
+        </button>
 
-      {/* 図鑑 */}
-        <button
-          onClick={() => alert("図鑑はまだ未実装です")}
-          className="absolute top-[59vh] left-[57vw] w-[20vw] h-[10vh] bg-transparent" />
-        
-      {/* 設定 */}
-        <button
-          onClick={() => alert("設定はまだ未実装です")}
-          className="absolute top-[5vh] left-[5vw] w-[15vw] h-[10vh] bg-transparent" />
-
-      {/* お知らせ */}
-        <button
-          onClick={() => alert("お知らせはまだ未実装です")}
-          className="absolute top-[5vh] left-[5vw] w-[15vw] h-[10vh] bg-transparent" />
-        
-      {/* プレイヤー情報 */}
-        <button
-          onClick={() => alert("プレイヤー情報はまだ未実装です")}
-          className="absolute bottom-[8vh] left-[10vw] w-[20vw] h-[10vh] bg-transparent" />
-        
-      {/* フレンド */}
-        <button
-          onClick={() => alert("フレンド機能はまだ未実装です")}
-          className="absolute bottom-[8vh] left-[10vw] w-[20vw] h-[10vh] bg-transparent" />
-
-      {/* ログアウト */}
-      <button onClick={handleSignOut}  
-        className="absolute top-[1vh] right-[1vw] text-xs text-white bg-black bg-opacity-50 px-2 py-1 rounded">
-          ログアウト
+        <button onClick={handleSignOut} className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 z-0 rounded shadow">
+          🚪 ログアウト
         </button>
       </div>
 
       {user && (
-        <p className="absolute bottom-2 left-2 text-white text-xs bg-black bg-opacity-50 px-2 py-1 rounded">
-          ログイン中: {user.email}</p>
+        <p className="mt-8 text-sm text-gray-600">ログイン中: {user.email}</p>
       )}
     </div>
   );

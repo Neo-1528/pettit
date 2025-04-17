@@ -1,7 +1,7 @@
 
 // Gacha.js
 import React, { useState } from "react";
-import { initialCards } from "../gachadata/cards"; // カードデータを使っている想定
+import characters from "../gachadata/gachaCharacters.json";
 
 const Gacha = () => {
   const [petitCoins, setPetitCoins] = useState(100); // 所持プチコイン
@@ -13,7 +13,7 @@ const Gacha = () => {
       return;
     }
 
-    const randomCard = initialCards[Math.floor(Math.random() * initialCards.length)];
+    const randomCard = characters[Math.floor(Math.random() * characters.length)];
     setGachaResult(randomCard);
     setPetitCoins(prev => prev - 5);
   };

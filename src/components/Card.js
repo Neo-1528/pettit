@@ -1,5 +1,4 @@
 import React from "react";
-import { getAttributeColor } from "../logic/utils";
 
 const rarityToStars = {
     N: "☆",
@@ -31,15 +30,10 @@ export default function Card({ card, onClick, isInhand = false }) {
         )}
 
     
-      {/* 上部：PP・名前・属性 */}
+      {/* 上部：PP・名前 */}
       <div className="flex justify-between items-center text-xs font-bold mb-1">
         <div className="bg-yellow-300 text-black px-2 py-0.5 rounded-full">PP:{card.pp}</div>
         <div className="text-center text-sm flex-1">{card.name}</div>
-        {card.attribute && (
-          <div className={`px-2 py-0.5 rounded-full ${getAttributeColor(card.attribute)}`}>
-            {card.attribute}
-          </div>
-        )}
       </div>
 
       {/* カード画像 */}

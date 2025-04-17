@@ -1,81 +1,23 @@
-// components/FieldInformation.js
 
+// components/FieldInformation.js
 import React from "react";
 
-const FieldInformation = ({
-  turn,
-  isPlayerTurn,
-  playerPP,
-  enemyPP,
-  field,
-  enemyField,
-  selectedEnemyIndex,
-  onSelectEnemy,
-  hitIndex,
-}) => {
+const FieldInformation = ({ turn, isPlayerTurn, playerPP, enemyPP }) => {
   return (
-    <div className="text-center text-sm">
-      <p className="text-lg mb-4">
-        ターン: {turn}（{isPlayerTurn ? "自分のターン" : "相手のターン"}）
-      </p>
-
-      <div className="flex flex-col items-center gap-10">
-        {/* 敵のフィールド（上） */}
-        <div className="flex flex-col items-center transform rotate-180">
-          <div className="flex justify-center gap-2">
-            {enemyField && enemyField.map((card, index) => (
-              <div
-                key={index}
-                onClick={() => onSelectEnemy(index)}
-                className={`transform rotate-180 border p-2 rounded w-24 shadow text-xs bg-white cursor-pointer ${
-                  selectedEnemyIndex === index ? "ring-2 ring-blue-500" : ""
-                }`}
-              >
-                <div className="text-[10px]">PP:{card?.PP}</div>
-                <div className="font-bold text-sm">{card?.name}</div>
-                {card?.image && (
-                  <img
-                    src={card.image}
-                    alt={card.name}
-                    className="w-full h-12 object-cover my-1"
-                  />
-                )}
-                <div className="text-green-600">HP: {card?.HP}</div>
-                <div className="text-red-600">AP: {card?.AP}</div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-2 text-center text-xs transform rotate-180">
-            敵 PP: {enemyPP}
-          </div>
-        </div>
-
-        {/* 自分のフィールド（下） */}
-        <div className="flex flex-col items-center">
-          <div className="flex justify-center gap-2">
-            {field && field.map((card, index) => (
-              <div
-                key={index}
-                className={`border p-2 rounded w-24 shadow text-xs bg-white ${card?.attacked ? "opacity-50" : ""}`}
-              >
-                <div className="text-[10px]">PP:{card?.PP}</div>
-                <div className="font-bold text-sm">{card?.name}</div>
-                {card?.image && (
-                  <img
-                    src={card.image}
-                    alt={card.name}
-                    className="w-full h-12 object-cover my-1"
-                  />
-                )}
-                <div className="text-green-600">HP: {card?.HP}</div>
-                <div className="text-red-600">AP: {card?.AP}</div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-2 text-center text-xs">自分 PP: {playerPP}</div>
-        </div>
+    <>
+      {/* ターン表示 */}
+      <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20 bg-white/80 px-4 py-1 rounded shadow text-sm">
+        ターン: {turn}（{isPlayerTurn ? "あなたのターン" : "敵のターン"}）
       </div>
-    </div>
+
+      {/* PP表示（上と下） */}
+      <div className="absolute top-[6%] right-4 z-20 text-xs bg-white/70 px-2 py-1 rounded">
+        敵 PP: {enemyPP}
+      </div>
+      <div className="absolute bottom-[6%] left-4 z-20 text-xs bg-white/70 px-2 py-1 rounded">
+        自分 PP: {playerPP}
+      </div>
+    </>
   );
 };
 
