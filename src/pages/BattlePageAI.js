@@ -35,6 +35,8 @@ const BattlePageAI = () => {
   const [hasAttackedThisPhase, setHasAttackedThisPhase] = useState(false);
 const [selectedDeck, setSelectedDeck] = useState(null);
 const [drawingCard, setDrawingCard] = useState(null);
+const [graveyard, setGraveyard] = useState([]);
+
 
   const [showlog, setShowLog] = useState(false);
   const [hasSummonedThisTurn, setHasSummonedThisTurn] = useState(false);
