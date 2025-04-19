@@ -4,7 +4,7 @@ import React from "react";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { getAuth } from "firebase/auth";
-import { doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import cards from "../data/cards";
 import CardComponent from "./CardComponent";

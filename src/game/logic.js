@@ -1,4 +1,4 @@
-import enemyAI from "./enemyAI/index.js";
+
 
 export class GameLogic {
   constructor(setters, getters) {

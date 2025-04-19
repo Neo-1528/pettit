@@ -2,16 +2,13 @@
 // components/GachaBoard.jsx
 import React, { useEffect, useRef, useState } from "react";
 import Bottle from "./Bottle";
-import GachaButtons from "./GachaButtons";
 import { useGachaLogic } from "../gachadata/useGachaLogic";
 import GachaResult from "./GachaResult";
 import MultiGachaResult from "./MultiGachaResult";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 
 const GachaBoard = () => {
-  const bottleCount = 9;
   const [coins, setCoins] = useState(1000);
   const [isShooting, setIsShooting] = useState(false);
 

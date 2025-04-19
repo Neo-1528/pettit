@@ -7,7 +7,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase/firebaseConfig";
 
 import Home from "./pages/Home";
-import App from "./App";
 import Gacha from "./pages/Gacha";
 import DeckListPage from "./pages/DeckListPage";
 import DeckEditPage from './pages/DeckEditPage';

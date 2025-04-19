@@ -2,9 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { getDecks, createDeck, deleteDeck } from '../firebase/deck';
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/firebase';
-import DeckCard from '../components/DeckCard';
 
 const DeckListPage = () => {
   const [decks, setDecks] = useState([]);

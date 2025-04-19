@@ -9,11 +9,8 @@ const BattleLayout = ({
   playerField = [],
   enemyField = [],
   hand = [],
-  setField,
-  setHand,
   isPlayerTurn,
   onTurnEnd,
-  onEnemyTurnEnd,
   onCardPlay,
   children,
 }) => {

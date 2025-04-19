@@ -3,12 +3,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { GameLogic } from "../game/logic";
 import { deckTypeA, deckTypeB } from "../data/StartDeck";
 import { useLocation } from "react-router-dom";
-import Card from "../components/Card";
 import FieldInformation from "../components/FieldInformation";
 import BattleLayout from "../components/BattleLayout";
 import BattleLog from "../components/BattleLog";
 import GameResultModal from "../components/GameResultModal";
-import Login from "./Login";
 
 const BattlePageAI = () => {
   const location = useLocation();

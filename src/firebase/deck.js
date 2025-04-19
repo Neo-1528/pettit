@@ -1,6 +1,6 @@
 
 import { db } from './firebaseConfig';
-import { collection, doc, getDocs, setDoc, deleteDoc, addDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, deleteDoc, addDoc } from 'firebase/firestore';
 
 
 export const getDecks = async (uid) => {
