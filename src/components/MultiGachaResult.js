@@ -11,21 +11,6 @@ import CardComponent from "./CardComponent";
 
 
 
-const rarityLabels = {
-  N: "あわ",
-  R: "しゅわ",
-  SR: "ぷく",
-  SSR: "ばぶ",
-  UR: "まぼろし"
-};
-
-const rarityClasses = {
-  N: "bg-gray-800 border-gray-400",
-  R: "bg-blue-800 border-blue-400",
-  SR: "bg-yellow-800 border-yellow-400",
-  SSR: "bg-purple-800 border-purple-400 animate-pulse",
-  UR: "bg-black border-pink-400 shadow-lg animate-pulse"
-};
 
 const rarityTextColors = {
   N: "text-gray-600",
@@ -102,7 +87,6 @@ const MultiGachaResult = ({ results, onClose }) => {
         <div className="grid grid-cols-2 gap-4 max-h-[480px] overflow-y-auto">
           {results.map((result, idx) => {
             const card = getCardDetail(result);
-            const nameColor = rarityTextColors[card.rarity || "N"] || "text-black";
             return (
               <div key={idx} className="flex flex-col items-center">
                 <CardComponent {...card} imageSrc={card.image} />

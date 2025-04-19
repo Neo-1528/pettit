@@ -9,13 +9,6 @@ import { collection, addDoc } from "firebase/firestore";
 import cards from "../data/cards";
 import CardComponent from "./CardComponent";
 
-const rarityLabels = {
-  N: "あわ",
-  R: "しゅわ", 
-  SR: "ぷく",
-  SSR: "ばぶ",
-  UR: "まぼろし"  
-};
 
 const rarityClasses = {
   N: "bg-gray-800 border-dray-400",
@@ -69,8 +62,8 @@ const GachaResult = ({ result, onClose }) => {
 
   if (!result) return null;
 
-  const rarity = result.rarity || "N";
-  const rarityClass = rarityClasses[rarity];
+
+
 
   const detailedCard = cards.find((card) => card.id === result.id);
 
@@ -85,7 +78,6 @@ const GachaResult = ({ result, onClose }) => {
     imageSrc: "/assets/cards/default.jpg",
   };
 
-  const nameColor = rarityTextColors[finalCard.rarity || "N"];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">

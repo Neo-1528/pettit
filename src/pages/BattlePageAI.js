@@ -13,7 +13,7 @@ const BattlePageAI = () => {
   const aiLevel = location.state?.aiLevel || "しゅわ";
   const deckData = location.state?.deckData;
 
-  const [selectedDeck, setSelectedDeck] = useState(null);
+
   const [waitingForStart, setWaitingForStart] = useState(true);
   const [mulliganCount, setMulliganCount] = useState(3);
   const [hand, setHand] = useState([]);
@@ -25,17 +25,16 @@ const BattlePageAI = () => {
   const [enemyPP, setEnemyPP] = useState(50);
   const [field, setField] = useState([]);
   const [enemyField, setEnemyField] = useState([]);
-  const [graveyard, setGraveyard] = useState([]);
-  const [enemyGraveyard, setEnemyGraveyard] = useState([]);
+  
   const [selectedEnemyIndex, setSelectedEnemyIndex] = useState(null);
-  const [hasAttackedThisPhase, setHasAttackedThisPhase] = useState(false);
+ 
   const [hitIndex, setHitIndex] = useState(null);
   const [gameResult, setGameResult] = useState(null);
   const [log, setLog] = useState([]);
   const [currentFieldBg, setCurrentFieldBg] = useState("basic-field.jpg");
-  const [selectedCard, setSelectedCard] = useState(null);
+  
   const [showlog, setShowLog] = useState(false);
-  const [drawingCard, setDrawingCard] = useState(null);
+  
   const [hasSummonedThisTurn, setHasSummonedThisTurn] = useState(false);
 
   const game = useRef(null);
