@@ -14,13 +14,19 @@ const BattleLayout = ({
   isPlayerTurn,
   onTurnEnd,
   onEnemyTurnEnd,
+  onCardPlay,
   children,
 }) => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [drawingCard, setDrawingCard] = useState(null); 
-  const playCard = (card) => {
-    setField(prev => [...prev, card]);
-    setHand(prev => prev.filter(c => c.id !== card.id));
+  const [graveyard, setGraveyard] = useState([]);
+  const [showGraveyard, setShowGraveyard] = useState(false);
+
+
+  const sendToGraveyard = (card) => {
+    setGraveyard(prev => [...prev, card]);
+    setDrawingCard(card);
+    setTimeout(() => setDrawingCard(null), 800);
   };
 
   return (
@@ -44,11 +50,24 @@ const BattleLayout = ({
 
         {/* 山札・墓地 */}
         <div className="flex justify-between w-full px-4 mt-2">
-          <div className="w-10 h-14 bg-blue-300 text-xs flex items-center justify-center rounded">
-            山札
+          <div className="deck-slot">
+            <img src="/images/card-back.jpg" alt="山札" style={{ width: '60px', height: '84px', borderRadius: '6px', boxShadow: '0 4px 8px rgba(0,0,0,0.2)', transform: 'scaleY(-1)' }} />
           </div>
-          <div className="w-10 h-14 bg-red-300 text-xs flex items-center justify-center rounded">
+          <div className="relative w-[60px] h-[84px] bg-red-300 text-xs flex items-center justify-center rounded cursor-pointer" onClick={() => setShowGraveyard(!showGraveyard)}>
             墓地
+            {showGraveyard && (
+              <div className="absolute top-full mt-2 w-[140px] bg-white border shadow-lg rounded z-50 p-2">
+                {graveyard.length === 0 ? (
+                  <div className="text-xs text-gray-500">カードなし</div>
+                ) : (
+                  graveyard.map((card, index) => (
+                    <div key={index} className="text-xs py-1 border-b">
+                      {card.name}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -81,15 +100,35 @@ const BattleLayout = ({
 
         {/* 山札・墓地・PP */}
         <div className="flex justify-between w-full px-4 items-center mb-4">
-          <div className="w-10 h-14 bg-red-300 text-xs flex items-center justify-center rounded">
+          <div className="relative w-[60px] h-[84px] bg-red-300 text-xs flex items-center justify-center rounded cursor-pointer" onClick={() => setShowGraveyard(!showGraveyard)}>
             墓地
+            {showGraveyard && (
+              <div className="absolute bottom-full mb-2 w-[140px] bg-white border shadow-lg rounded z-50 p-2">
+                {graveyard.length === 0 ? (
+                  <div className="text-xs text-gray-500">カードなし</div>
+                ) : (
+                  graveyard.map((card, index) => (
+                    <div key={index} className="text-xs py-1 border-b">
+                      {card.name}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
           <div className="text-sm font-bold bg-white/80 px-4 py-1 rounded-full">
             PP: {playerPP}
           </div>
-          <div className="w-10 h-14 bg-blue-300 text-xs flex items-center justify-center rounded">
-            山札
-          </div>
+          <img 
+            src="/images/card-back.jpg"
+            alt="山札"
+            style={{
+              width: '60px',
+              height: '84px',
+              borderRadius: '6px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+            }}
+          />
         </div>
 
         {/* 手札 */}
@@ -121,7 +160,7 @@ const BattleLayout = ({
         </div>
 
         {selectedCard && (
-          <div className="fixed inset-0 bg-black/50 flex justify-center itens-center z-50">
+          <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
             <div className="bg-white p-4 rounded shadow w-64 text-center">
               <h2 className="font-bold mb-2">{selectedCard.name}</h2>
               <p>PP: {selectedCard.PP}</p>
@@ -131,7 +170,7 @@ const BattleLayout = ({
                 <button
                   className="bg-blue-500 text-white px-3 py-1 rounded"
                   onClick={() => {
-                    playCard(selectedCard);
+                    onCardPlay?.(selectedCard);
                     setSelectedCard(null);
                   }}
                 >
@@ -161,7 +200,7 @@ const BattleLayout = ({
           <motion.div
             className="fixed top-[10%] right-[5%] z-50 w-24 h-32 bg-white border rounded shadow text-xs flex items-center justify-center"
             initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-            animate={{ x: -300, y: 400, opacity: 0.8, scale: 0.95 }}
+            animate={{ x: -300, y: 400, opacity: 0.8, scale: 0.1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             {drawingCard.name}

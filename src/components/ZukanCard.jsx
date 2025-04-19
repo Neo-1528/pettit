@@ -1,17 +1,16 @@
 
 // src/components/ZukanCard.jsx
 import React from "react";
-import "./ZukanCard.css";
+import CardComponent from "./CardComponent";
 
 const ZukanCard = ({ card }) => {
+  const displayImage = card.owned
+    ? card.imageSrc || `/images/${card.image}` // 両方対応
+    : "/images/card-unknown.jpg"; // 黒塗り画像（未所持用）
+
   return (
-    <div className="zukan-card">
-      {card.owned ? (
-        <img src={`/images/${card.image}`} alt={card.name} />
-      ) : (
-        <div className="zukan-card-blackout">？？？</div>
-      )}
-      <p>{card.owned ? card.name : "？？？"}</p>
+    <div className="transition transform hover:scale-105">
+      <CardComponent imageSrc={displayImage} />
     </div>
   );
 };

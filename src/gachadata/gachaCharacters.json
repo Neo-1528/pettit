@@ -34,10 +34,15 @@
   {  "id": "sakko", "name": "殺狐", "pp": 7, "hp": 100, "ap": 10, "rarity": "UR" },
   { "id": "goro-UR",  "name": "妖王ゴロ左衛門", "pp": 9, "hp": 100, "ap": 28, "rarity": "UR", "images": "/image/goro-UR.jpg" },
   { "id": "seimei-UR",  "name": "式封神星明", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/seimei-UR.jpg" },
-  { "id": "thirano2",  "name": "ティラノフィアマ", "pp": 9, "hp": 90, "ap": 40, "rarity": "UR" },
-  { "id": "omushi",  "name": "お虫太郎", "pp": 5, "hp": 50, "ap": 20, "rarity": "UR", "images": "/images/omushi.jpg" },
-  {  "id": "hadekera", "name": "ハデケラトップス", "pp": 9, "hp": 100, "ap": 28, "rarity": "UR" },
-  { "id": "karo-UR",  "name": "黒呪の禍狼", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/karo-LR.jpg" },
-  { "id": "shuko-UR",  "name": "焔猛の朱虎", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/shuko-UR.jpg" },
-  { "id": "reikaku-UR",  "name": "翠翼の霊鶴", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/reikaku-UR.jpg" }
+  { "id": "thirano-UR",  "name": "ティラノフィアマ", "pp": 9, "hp": 90, "ap": 40, "rarity": "UR"  },
+  { "id": "omushi-UR",  "name": "お虫太郎", "pp": 5, "hp": 50, "ap": 20, "rarity": "UR", "images": "/images/omushi-UR.jpg" },
+  { "id": "karo-LR",  "name": "黒呪ノ禍狼", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/karo-LR.jpg" },
+  { "id": "shuko-UR",  "name": "焔猛ノ朱虎", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/shuko-UR.jpg" },
+  { "id": "reikaku-UR",  "name": "翠翼ノ霊鶴", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/reikaku-UR.jpg" },
+  { "id": "seiko-UR",  "name": "蒼涙ノ清狐", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/seiko-UR.jpg" },
+  { "id": "yuna",  "name": "水ノ式神　優糯", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/yuna.jpg" },
+  { "id": "hukai",  "name": "木ノ式神　風廻", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/hukai.jpg" },
+  { "id": "guren",  "name": "火ノ式神　紅蓮", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/guren.jpg" },
+  { "id": "eiji",  "name": "影ノ式神　影時", "pp": 9, "hp": 90, "ap": 22, "rarity": "UR", "image": "/images/eiji.jpg" }
+  
 ]

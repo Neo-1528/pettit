@@ -11,6 +11,8 @@ const awaAI = (game) => {
   const playable = newHand.filter(card => card.pp <= pp);
   if (playable.length > 0) {
     const selected = playable[Math.floor(Math.random() * playable.length)];
+    if (newField.length >= 3) return;
+
     newField.push({
       ...selected,
       currentHp: selected.hp,
