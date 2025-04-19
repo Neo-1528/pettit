@@ -32,15 +32,18 @@ const BattlePageAI = () => {
   const [gameResult, setGameResult] = useState(null);
   const [log, setLog] = useState([]);
   const [currentFieldBg, setCurrentFieldBg] = useState("basic-field.jpg");
-  
+  const [hasAttackedThisPhase, setHasAttackedThisPhase] = useState(false);
+const [selectedDeck, setSelectedDeck] = useState(null);
+const [drawingCard, setDrawingCard] = useState(null);
+
   const [showlog, setShowLog] = useState(false);
-  
   const [hasSummonedThisTurn, setHasSummonedThisTurn] = useState(false);
 
   const game = useRef(null);
   const deckRef = useRef(deck);
   const handRef = useRef(hand);
   const graveyardRef = useRef([]);
+  const enemyGraveyardRef = useRef([]);
 
   useEffect(() => {
     deckRef.current = deck;
@@ -76,7 +79,8 @@ const BattlePageAI = () => {
         setEnemyHand,
         setEnemyField,
         setGraveyard,
-        setEnemyGraveyard,
+        setEnemyGraveyard: (newValue) => enemyGraveyardRef.current = newValue,
+
         setPlayerPP,
         setEnemyPP,
         setLog,
