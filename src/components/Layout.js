@@ -8,7 +8,8 @@ const Layout = () => {
   const location = useLocation();
 
   // ホーム画面ではボタンを非表示にしたい場合の処理
-  const showHomeButton = location.pathname !== "/home";
+  const hidePaths = ["/home", "/batlePVP", "/battle-ai"];
+  const showHomeButton = !hidePaths.includes(location.pathname);
 
   return (
     <div className="min-h-screen flex flex-col">

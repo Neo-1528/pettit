@@ -23,6 +23,7 @@ import BattlePagePVP from "./pages/BattlePagePVP";
 import StarterDeckSelectPage from "./pages/StarterDeckSelectPage";
 import ZukanPage from "./pages/ZukanPage";
 import Login from "./pages/Login";
+import MulliganPage from "./pages/MulliganPage";
 
 export default function AppRouter() {
   const [user, setUser] = useState(null);
@@ -79,6 +80,7 @@ export default function AppRouter() {
         <Route path="/mode-select/ai" element={<ModeSelectAIPage />} />
         <Route path="/mode-select/player" element={<ModeSelectPlayerPage />} />
         <Route path="/mode-select/friend" element={<ModeSelectFriendPage />} />
+        <Route path="/mulligan" element={<MulliganPage />} />
         <Route path="/battle-ai" element={<BattlePageAI />} />
         <Route path="/battle-pvp" element={<BattlePagePVP />} />
         <Route path="/deck-select" element={<DeckSelectPage user={user} />} />

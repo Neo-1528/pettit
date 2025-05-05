@@ -1,230 +1,176 @@
 
-import React, { useState, useEffect, useRef } from "react";
-import { GameLogic } from "../game/logic";
-import { deckTypeA, deckTypeB } from "../data/StartDeck";
+import React, { useState, useEffect, useRef, use } from "react";
 import { useLocation } from "react-router-dom";
-import FieldInformation from "../components/FieldInformation";
+import { GameLogic } from "../game/GameLogic";
 import BattleLayout from "../components/BattleLayout";
-import BattleLog from "../components/BattleLog";
 import GameResultModal from "../components/GameResultModal";
 
-const BattlePageAI = () => {
-  const location = useLocation();
-  const aiLevel = location.state?.aiLevel || "しゅわ";
-  const deckData = location.state?.deckData;
 
-
-  const [waitingForStart, setWaitingForStart] = useState(true);
-  const [mulliganCount, setMulliganCount] = useState(3);
-  const [hand, setHand] = useState([]);
+function BattlePage() {
   const [deck, setDeck] = useState([]);
-  const [enemyDeck, setEnemyDeck] = useState([]);
-  const [enemyHand, setEnemyHand] = useState([]);
-  const [turn, setTurn] = useState(1);
-  const [playerPP, setPlayerPP] = useState(50);
-  const [enemyPP, setEnemyPP] = useState(50);
+  const [hand, setHand] = useState([]);
   const [field, setField] = useState([]);
   const [enemyField, setEnemyField] = useState([]);
-  
-  const [selectedEnemyIndex, setSelectedEnemyIndex] = useState(null);
- 
-  const [hitIndex, setHitIndex] = useState(null);
-  const [gameResult, setGameResult] = useState(null);
-  const [log, setLog] = useState([]);
-  const [currentFieldBg, setCurrentFieldBg] = useState("basic-field.jpg");
-  const [hasAttackedThisPhase, setHasAttackedThisPhase] = useState(false);
-const [selectedDeck, setSelectedDeck] = useState(null);
-const [drawingCard, setDrawingCard] = useState(null);
-const [graveyard, setGraveyard] = useState([]);
+  const [pp, setPP] = useState(50);
+  const [enemyPP, setEnemyPP] = useState(50);
+  const [turn, setTurn] = useState(1);
+  const [attackerIndex, setAttackerIndex] = useState(null);
+  const [result, setResult] = useState(null);
+  const [hasAttacked, setHasAttacked] = useState(false); //攻撃済みか
+  const [turnLabel, setTurnLabel] = useState(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [justDrewCard, setJustDrewCard] = useState(false);
+  const [playerGraveyard, setPlayerGraveyard] = useState([]);
+  const [enemyGraveyard, setEnemyGraveyard] = useState([]);
+  const [showGraveyard, setShowGraveyard] = useState(false);
+  const [selectedItemCard, setSelectedItemCard] = useState(null);
 
+  const game = useRef(null); //インスタンス保持
 
-  const [showlog, setShowLog] = useState(false);
-  const [hasSummonedThisTurn, setHasSummonedThisTurn] = useState(false);
+  const location = useLocation();
+  const deckData = location.state.deckData; //デッキ情報を取得
+  const isPlayerTurn = turn % 2 === 1;
 
-  const game = useRef(null);
-  const deckRef = useRef(deck);
-  const handRef = useRef(hand);
-  const graveyardRef = useRef([]);
-  const enemyGraveyardRef = useRef([]);
+  const stateRef = useRef({
+    deck,
+    hand,
+    field,
+    enemyField,
+    pp,
+    enemyPP,
+    turn
+  });
 
-  useEffect(() => {
-    deckRef.current = deck;
-  }, [deck]);
+  useEffect(() => { stateRef.current.hand = hand; }, [hand]);
+  useEffect(() => { stateRef.current.field = field; }, [field]);
+  useEffect(() => { stateRef.current.deck = deck; }, [deck]);
+  useEffect(() => { stateRef.current.enemyField = enemyField; }, [enemyField]);
+  useEffect(() => { stateRef.current.pp = pp; }, [pp]);
+  useEffect(() => { stateRef.current.enemyPP = enemyPP; }, [enemyPP]);
+  useEffect(() => { stateRef.current.turn = turn; }, [turn]);
 
-  useEffect(() => {
-    handRef.current = hand;
-  }, [hand]);
-
-  // AIターン処理（useEffect内で適切に動作させる）
-  useEffect(() => {
-    if (!game.current || waitingForStart) return;
-    if (turn % 2 === 0) {
-      setTimeout(() => {
-        game.current.drawCards(1);
-        game.current.enemyPlayCards();
-        game.current.enemyAttack();
-        setTimeout(() => {
-          nextTurn();
-        }, 1000);
-      }, 1000);
+  useEffect (() => {
+    if (turn % 2 === 1) {
+      setTurnLabel("あなたのターン！");
+    } else {
+      setTurnLabel("敵のターン！");
     }
-  }, [turn, waitingForStart]);
+
+    const timer = setTimeout(() => setTurnLabel(null), 1500);
+    return () => clearTimeout(timer);
+  }, [turn]);
 
   useEffect(() => {
-    if (!deckData || game.current) return;
-    const instance = new GameLogic(
-      {
-        setDeck,
-        setHand,
-        setField,
-        setEnemyDeck,
-        setEnemyHand,
-        setEnemyField,
-        setGraveyard,
-        setEnemyGraveyard: (newValue) => enemyGraveyardRef.current = newValue,
+    if (justDrewCard) {
+      setIsDrawing(true);
+      setTimeout(() => {
+        setIsDrawing(false);
+        setJustDrewCard(false);
+      }, 800);
+    }
+  }, [justDrewCard]);
 
-        setPlayerPP,
-        setEnemyPP,
-        setLog,
-        setTurn,
-        setGameResult,
-        setHasAttackedThisPhase,
-        setHitIndex,
-      },
+
+  useEffect(() => {
+    if (!deckData) return;
+    const instance = new GameLogic(
+      { setDeck, setHand, setField, setEnemyField, setPP, setEnemyPP, setTurn, setResult, setPlayerGraveyard, setEnemyGraveyard },
       {
-        getTurn: () => turn,
-        getField: () => field,
-        getEnemyField: () => enemyField,
-        getPlayerPP: () => playerPP,
-        getEnemyPP: () => enemyPP,
-        getDeck: () => deckRef.current,
-        getHand: () => handRef.current,
-        getEnemyDeck: () => enemyDeck,
-        getEnemyHand: () => enemyHand,
-        getGraveyard: () => graveyardRef.current,
-      },
-      { aiLevel }
+         getDeck: () => stateRef.current.deck,
+         getHand: () => stateRef.current.hand, 
+         getField: () => stateRef.current.field, 
+         getEnemyField: () => stateRef.current.enemyField, 
+         getPP: () => stateRef.current.pp, 
+         getEnemyPP: () => stateRef.current.enemyPP,
+         getTurn: () => stateRef.current.turn 
+      }
     );
+    instance.setOnDraw(() => setJustDrewCard(true));
     game.current = instance;
 
-    const fullDeck = instance.generateDeck(30, deckData.cards);
-    instance.drawInitialHand(fullDeck);
-    setSelectedDeck(deckData);
+    const fullDeck =[...deckData.cards];
+    const initialHand = deckData.hand || [];
+    const remainingDeck = fullDeck.filter(c => !initialHand.includes(c));
 
-    const enemyBase = Math.random() < 0.5 ? deckTypeA : deckTypeB;
-    const enemyDackFull = instance.generateDeck(30, enemyBase);
-    instance.drawEnemyInitialHand(enemyDackFull);
+    instance.setDeck(remainingDeck);
+    instance.setHand(initialHand);
+    instance.setField([]);
+    instance.setPP(50);
+    instance.setTurn(1);
 
-    setWaitingForStart(false);
+    setEnemyField([]);
   }, [deckData]);
 
-  const drawCard = () => {
-    if (deck.length === 0) return;
-    const card = deck[0];
-    setDrawingCard(card);
-    setDeck((prev) => prev.slice(1));
-
-    setTimeout(() => {
-      setHand((prev) => [...prev, card]);
-      setDrawingCard(null);
-    }, 800);
-  };
-
-  const handleMulligan = () => {
-    if (mulliganCount > 0) {
-      game.current.handleMulligan(deck, mulliganCount);
-      setMulliganCount(mulliganCount - 1);
-    }
-  };
-
-  const handlePlayCard = (card, index) => {
-    if (hasSummonedThisTurn) {
-      alert("このターンはすでに召喚済みです。");
+  const handlePlayCard = (index) => { // カードをプレイする関数
+    const card = hand[index];
+    if (card.type === "item") {
+      setSelectedItemCard({ ...card, index });
       return;
     }
-    const result = game.current.playCard(card, index, field, hand, playerPP);
-    if (result.success) {
-      setHasSummonedThisTurn(true);
-    }
+    game.current.playCard(index);
   };
 
-  const nextTurn = () => {
-    const newTurn = turn + 1;
-    setTurn(newTurn);
-    setHasAttackedThisPhase(false);
-    setHasSummonedThisTurn(false);
-  
-    setField(prev => prev.map(c => ({ ...c, attacked: false, canAttack: true })));
-    setEnemyField(prev => prev.map(c => ({ ...c, attacked: false, canAttack: true })));
-  
-    if (newTurn % 2 === 1) {
-      // プレイヤーターン
-      game.current.drawCard();
-    } else {
-      // 敵ターン
-      setTimeout(() => {
-        game.current.enemyDrawCard();
-        game.current.enemyPlayCard();
-        game.current.enemyAttackPhase();
-        setTimeout(() => {
-          nextTurn(); // ターン継続
-        }, 1000);
-      }, 1000);
+  const handleCharacterClick = (charIndex) => {
+    if (selectedItemCard) {
+      game.current.useItemCardOnTarget(selectedItemCard, charIndex);
+      const newHand = [...hand];
+      newHand.splice(selectedItemCard.index, 1);
+      setHand(newHand);
+      setSelectedItemCard(null);
     }
   };
   
+
+  const handleAttack = (attackerIndex, targetIndex) => { // 攻撃処理
+    if (!game.current || hasAttacked) return;
+
+    const attackerCard = field[attackerIndex];
+    if (!attackerCard?.canAttackNextTurn) return;
+
+    game.current.attack(attackerIndex, targetIndex);
+    setHasAttacked(true); 
+    setAttackerIndex(null); 
+  };
+
+  const handleEndTurn = () => { // ターン終了処理
+    if (!game.current) return;
+    game.current.endTurn();
+    setHasAttacked(false);
+    setAttackerIndex(null);
+    setTimeout(() => {
+      game.current.enemyPlay();
+      game.current.enemyAttack();
+      game.current.endTurn();
+    }, 1000);
+  };
 
   return (
-    <div>
-      <BattleLayout
-        background={`/images/${currentFieldBg}`}
-        playerPP={playerPP}
-        enemyPP={enemyPP}
-        playerField={field}
-        enemyField={enemyField}
-        hand={hand}
-        setField={setField}
-        setHand={setHand}
-        isPlayerTurn={turn % 2 === 1}
-        onTurnEnd={nextTurn}
-        onCardPlay={(card) => handlePlayCard(card, hand.findIndex(c => c.uid === card.uid))}
-      >
-        <FieldInformation
-          turn={turn}
-          isPlayerTurn={turn % 2 === 1}
-          playerPP={playerPP}
-          enemyPP={enemyPP}
-          field={field}
-          enemyField={enemyField}
-          selectedEnemyIndex={selectedEnemyIndex}
-          onSelectEnemy={setSelectedEnemyIndex}
-          hitIndex={hitIndex}
-        />
-      </BattleLayout>
+    <>
+    <BattleLayout
+      hand={hand}
+      field={field}
+      enemyField={enemyField}
+      pp={pp}
+      enemyPP={enemyPP}
+      turn={turn}
+      isPlayerTurn={isPlayerTurn}
+      onPlayCard={handlePlayCard}
+      onTurnEnd={handleEndTurn}
+      attackerIndex={attackerIndex}
+      setAttackerIndex={setAttackerIndex}
+      onAttack={handleAttack} 
+      hasAttacked={hasAttacked} 
+      turnLabel={turnLabel}
+      isDrawing={isDrawing}
+      playerGraveyard={playerGraveyard}
+      enemyGraveyard={enemyGraveyard}
+      showGraveyard={showGraveyard}
+      setShowGraveyard={setShowGraveyard}
+    />
 
-      <button
-        onClick={() => setShowLog(true)}
-        className="fixed top-1/2 right-2 transform -translate-y-1/2 z-40 bg-white/90 border rounded-full p-2 shadow hover:bg-yellow-100"
-      >
-        📜
-      </button>
-      {showlog && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center">
-          <div className="bg-white w-96 max-h-[70vh] overflow-y-auto p-4 rounded shadow relative">
-            <BattleLog log={log} />
-            <button
-              onClick={() => setShowLog(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
-
-      <GameResultModal result={gameResult} onClose={() => setGameResult(null)} />
-    </div>
+    <GameResultModal result={result} onClose={() => setResult(null)} />
+  </>
   );
-};
+}
 
-export default BattlePageAI;
+export default BattlePage;

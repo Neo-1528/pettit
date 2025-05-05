@@ -32,7 +32,7 @@ const DeckSelectPage = ({user}) => {
   }, [user]);
 
   const handleDeckChoice = (deck) => {
-    navigate("/battle-ai", {
+    navigate("/mulligan", {
       state: { aiLevel, deckData: deck },
     });
   };

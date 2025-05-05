@@ -1,0 +1,32 @@
+
+.battle-mode-container {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.bottle-button {
+  position: absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.ai-bottle {
+  top: 35%;
+  left: 18%;
+  width: 20vw;
+  height: 40vh;
+}
+
+.player-bottle {
+  top: 35%;
+  right: 18%;
+  width: 20vw;
+  height: 40vh;
+}
+
+  
